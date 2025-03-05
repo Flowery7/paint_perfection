@@ -729,66 +729,67 @@ Seasonal changes, weather conditions, and proper preparation are all part of ens
     </div>
   </footer>
   
-<div id="cookie-banner" style="display: flex; justify-content: space-between; align-items: center; background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 10px; position: fixed; bottom: 0; width: 100%; z-index: 1000;">
-  <div>
-    <p style="margin: 0;">
-      We use cookies for Google Analytics to improve your experience.
-      <a href="privacy.html" target="_blank" style="text-decoration: underline;">Learn more</a>
-    </p>
-  </div>
-  <div>
-    <button id="accept-cookies" style="margin-right: 10px;">Accept</button>
-    <button id="reject-cookies">Decline</button>
+
+
+            <!-- Cookie Banner -->
+<div id="cookie-banner" style="position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.85); color: white; padding: 10px 15px; border-radius: 6px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; max-width: 90%; width: 320px; text-align: center;">
+  <p style="margin: 0; font-size: 12px;">We use cookies to enhance your experience. By continuing, you agree to our <a href="privacy.html" style="color: #EBC931; text-decoration: underline;">Privacy Policy</a>.</p>
+  <div style="display: flex; gap: 8px; margin-top: 25px; flex-wrap: wrap; justify-content: center;">
+    <button onclick="acceptCookies()" style="background-color: #EBC931; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; transition: background-color 0.3s; width: 70px;">
+      Accept
+    </button>
+    <button onclick="rejectCookies()" style="background-color: #FF4D4D; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; transition: background-color 0.3s; width: 70px;">
+      Reject
+    </button>
   </div>
 </div>
 
+<!-- JavaScript to Handle Cookie Consent -->
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const cookieBanner = document.getElementById("cookie-banner");
-    const acceptButton = document.getElementById("accept-cookies");
-    const rejectButton = document.getElementById("reject-cookies");
-    
-    // Check if user already made a choice
-    const userConsent = localStorage.getItem("cookieConsent");
-    if (userConsent) {
-      cookieBanner.style.display = "none";
-      if (userConsent === "accepted") {
-        loadGoogleAnalytics();
+  function acceptCookies() {
+    document.cookie = "cookies_accepted=true; path=/; max-age=" + 60 * 60 * 24 * 365; // Expires in 1 year
+    document.getElementById("cookie-banner").style.display = "none";
+    loadCookies();
+  }
+
+  function rejectCookies() {
+    document.cookie = "cookies_accepted=false; path=/; max-age=" + 60 * 60 * 24 * 365; // Expires in 1 year
+    document.getElementById("cookie-banner").style.display = "none";
+    blockCookies();
+  }
+
+  window.onload = function() {
+    if (document.cookie.indexOf("cookies_accepted=true") !== -1) {
+      loadCookies();
+      document.getElementById("cookie-banner").style.display = "none";
+    } else if (document.cookie.indexOf("cookies_accepted=false") !== -1) {
+      blockCookies();
+      document.getElementById("cookie-banner").style.display = "none";
+    }
+  };
+
+  function loadCookies() {
+    var script = document.createElement("script");
+    script.src = "https://www.googletagmanager.com/gtag/js?id=G-CGSHJBMQHL"; // Replace UA-XXXXX-X with your tracking ID
+    script.async = true;
+    document.head.appendChild(script);
+
+    script.onload = function() {
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+        dataLayer.push(arguments);
       }
-    }
-    
-    // Handle Accept Button
-    acceptButton.addEventListener("click", () => {
-      localStorage.setItem("cookieConsent", "accepted");
-      loadGoogleAnalytics();
-      cookieBanner.style.display = "none";
-    });
-    
-    // Handle Reject Button
-    rejectButton.addEventListener("click", () => {
-      localStorage.setItem("cookieConsent", "rejected");
-      cookieBanner.style.display = "none";
-    });
-    
-    // Function to load Google Analytics script
-    function loadGoogleAnalytics() {
-      const script = document.createElement("script");
-      script.src = "https://www.googletagmanager.com/gtag/js?id=G-";
-      script.async = true;
-      document.head.appendChild(script);
-      
-      script.onload = () => {
-        window.dataLayer = window.dataLayer || [];
-        
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-        gtag("js", new Date());
-        gtag("config", "G-");
-      };
-    }
-  });
+      gtag("js", new Date());
+      gtag("config", "G-CGSHJBMQHL"); // Replace UA-XXXXX-X with your tracking ID
+    };
+  }
+
+  function blockCookies() {
+    console.log("Cookies are blocked.");
+  }
 </script>
+  
 
 
 
